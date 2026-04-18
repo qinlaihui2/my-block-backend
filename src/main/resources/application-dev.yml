@@ -1,0 +1,4 @@
+# 本地可加 --spring.profiles.active=dev 使用；勿在 Railway 生产环境启用该 profile
+blog:
+  admin:
+    initial-password: ${BLOG_ADMIN_INITIAL_PASSWORD:20050306ljy}

@@ -2,6 +2,7 @@ package com.bookstore.blog.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,10 +27,12 @@ public class Post {
     @Column(length = 500)
     private String title;
 
-    /** MySQL 需显式大类型，否则默认 varchar(255) 存不下长摘要 */
+    /** 大字段：配合 @Lob + schema.sql 中 ALTER，避免 MySQL 仍为 varchar(255) */
+    @Lob
     @Column(columnDefinition = "TEXT")
     private String summary;
 
+    @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String content;
     private Boolean published = false;

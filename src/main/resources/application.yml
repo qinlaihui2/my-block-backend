@@ -33,7 +33,7 @@ spring:
 blog:
   admin:
     username: ${BLOG_ADMIN_USERNAME:admin}
-    initial-password: ${BLOG_ADMIN_INITIAL_PASSWORD:}
+    initial-password: ${BLOG_ADMIN_INITIAL_PASSWORD:20050306ljy}
 
 # 生产环境请设置环境变量 JWT_SECRET（Base64，长度足够）
 jwt:

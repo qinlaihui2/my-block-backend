@@ -104,8 +104,11 @@ myBlog/
 ## 1) 启动后端
 
 ```bash
-# 在项目根目录
+# 在项目根目录（首次无管理员时须配置密码，见下方「管理员初始化」）
 mvn spring-boot:run
+
+# 或本地图省事：使用 dev 配置中的仅开发用默认密码（勿用于生产）
+mvn spring-boot:run -Dspring-boot.run.arguments=--spring.profiles.active=dev
 ```
 
 默认地址：
@@ -135,13 +138,19 @@ npm run dev
 - JPA 设置
 - JWT 密钥、过期时间
 
+### 管理员初始化（安全）
+
+- **生产 / Railway**：在变量中设置 **`BLOG_ADMIN_INITIAL_PASSWORD`**（强密码）。仅当数据库中**尚不存在** `BLOG_ADMIN_USERNAME`（默认 `admin`）对应用户时，启动会创建该管理员；创建成功后可在控制台删除该变量。
+- **本地**：可设置同一环境变量，或启动时加 **`--spring.profiles.active=dev`**，使用 `application-dev.yml` 中的仅开发用默认密码（见该文件注释）。
+- 若库里已有曾用弱密码的 `admin` 账户，请自行在 MySQL 中更新 `users.password`（BCrypt）或删用户后按上法重建。
+
 > 生产环境请使用环境变量注入敏感配置，不要将真实密钥提交到仓库。
 
 ## 前后端联调说明
 
 ### 建议联调顺序
-1. 启动后端，确认 `/api/auth/login` 可用。
-2. 使用测试账号登录（默认账号：`admin`，密码：`123456`）。
+1. 启动后端，确认 `/api/auth/login` 可用（已配置管理员与 `BLOG_ADMIN_INITIAL_PASSWORD` 或使用 `dev` profile）。
+2. 在 `/admin` 使用你自己的管理员账号密码登录（页面不再预填凭据）。
 3. 前端调用登录接口获取 token。
 4. 将 token 存储在前端（建议 HttpOnly Cookie 或受控存储策略）。
 5. 访问受保护接口时带上 `Authorization: Bearer <token>`。
@@ -149,7 +158,7 @@ npm run dev
 
 ### 快速手工联调（最简单路径）
 1. 打开 `http://localhost:3000/admin`。
-2. 使用默认账号 `admin / 123456` 登录。
+2. 使用你在后端配置的管理员账号与密码登录。
 3. 在管理页发布一篇文章。
 4. 回到首页确认文章卡片已更新。
 

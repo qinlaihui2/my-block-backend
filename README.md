@@ -138,18 +138,18 @@ npm run dev
 - JPA 设置
 - JWT 密钥、过期时间
 
-### 管理员初始化（安全）
+### 管理员初始化
 
-- **生产 / Railway**：在变量中设置 **`BLOG_ADMIN_INITIAL_PASSWORD`**（强密码）。仅当数据库中**尚不存在** `BLOG_ADMIN_USERNAME`（默认 `admin`）对应用户时，启动会创建该管理员；创建成功后可在控制台删除该变量。
-- **本地**：可设置同一环境变量，或启动时加 **`--spring.profiles.active=dev`**，使用 `application-dev.yml` 中的仅开发用默认密码（见该文件注释）。
-- 若库里已有曾用弱密码的 `admin` 账户，请自行在 MySQL 中更新 `users.password`（BCrypt）或删用户后按上法重建。
+- 默认管理员用户名为 **`caixukun`**，初始密码见 `application.yml` 中 `blog.admin`（个人自用；公开仓库请用环境变量 **`BLOG_ADMIN_USERNAME` / `BLOG_ADMIN_INITIAL_PASSWORD`** 覆盖）。
+- 若数据库里**只有旧用户 `admin`**，应用启动时会自动将其**改名为当前配置的用户名**并重置为上述初始密码。
+- **本地**：也可使用 `--spring.profiles.active=dev`（`application-dev.yml` 与主配置默认一致）。
 
-> 生产环境请使用环境变量注入敏感配置，不要将真实密钥提交到仓库。
+> 若仓库会公开，请勿把真实密码写进 YAML，改用 Railway / 本机环境变量。
 
 ## 前后端联调说明
 
 ### 建议联调顺序
-1. 启动后端，确认 `/api/auth/login` 可用（已配置管理员与 `BLOG_ADMIN_INITIAL_PASSWORD` 或使用 `dev` profile）。
+1. 启动后端，确认 `/api/auth/login` 可用（默认管理员见 `application.yml` 的 `blog.admin`）。
 2. 在 `/admin` 使用你自己的管理员账号密码登录（页面不再预填凭据）。
 3. 前端调用登录接口获取 token。
 4. 将 token 存储在前端（建议 HttpOnly Cookie 或受控存储策略）。
